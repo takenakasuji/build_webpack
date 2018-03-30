@@ -1,15 +1,17 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = [
 {
+  mode: 'development',
+  devtool: '#inline-source-map',
+  cache: true,
   entry: './src/js/app.js',
   output: {
-    path: path.join(__dirname, 'public'),
+    path: path.join(__dirname, 'dist'),
     // publicPath: 'http://test.com/',
-    filename: 'bundle.js'
+    filename: 'js/bundle.js'
   },
   module: {
     rules: [
@@ -27,22 +29,11 @@ module.exports = [
       }
     ]
   },
+  devServer: {
+    contentBase: path.resolve(__dirname),
+    port: 3000,
+  },
   plugins: [
-    new ExtractTextPlugin('css/[name].css'),
-    new CopyWebpackPlugin([
-      {
-        from: 'src/img',
-        to: path.join(__dirname, 'public/img'),
-      },
-      {
-        from: '**/*.html',
-        to: path.join(__dirname, 'public/'),
-        ignore: [
-          'node_modules/**/*.html',
-          'public/**/*.html'
-        ],
-      }
-    ]),
-    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
-  ]
+    new ExtractTextPlugin('css/[name].css')
+  ],
 }];
